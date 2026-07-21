@@ -10,35 +10,47 @@ let transporter = null;
 const getTransporter = async () => {
   if (transporter) return transporter;
 
-  const isDev = process.env.NODE_ENV !== 'production';
   const hasCredentials = process.env.EMAIL_USER && process.env.EMAIL_PASS &&
     !process.env.EMAIL_USER.includes('your_email');
 
-  if (isDev && !hasCredentials) {
-    // Auto-generate a free Ethereal test account (ethereal.email)
-    const testAccount = await nodemailer.createTestAccount();
-    console.log('\n📧 Ethereal dev email account created:');
-    console.log(`   User: ${testAccount.user}`);
-    console.log(`   Pass: ${testAccount.pass}`);
-    console.log('   Preview emails at: https://ethereal.email/messages\n');
+  // If no email credentials are configured, skip email entirely
+  if (!hasCredentials) {
+    if (process.env.NODE_ENV === 'production') {
+      console.log('⚠️  No EMAIL_USER/EMAIL_PASS configured — skipping email delivery in production.');
+      return null;
+    }
+    // In development, use free Ethereal test account
+    try {
+      const testAccount = await nodemailer.createTestAccount();
+      console.log('\n📧 Ethereal dev email account created:');
+      console.log(`   User: ${testAccount.user}`);
+      console.log(`   Pass: ${testAccount.pass}`);
+      console.log('   Preview emails at: https://ethereal.email/messages\n');
 
-    transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: { user: testAccount.user, pass: testAccount.pass },
-    });
-  } else {
-    transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT) || 587,
-      secure: parseInt(process.env.EMAIL_PORT) === 465,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+      transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: { user: testAccount.user, pass: testAccount.pass },
+      });
+      return transporter;
+    } catch (err) {
+      console.error('⚠️  Failed to create Ethereal test account:', err.message);
+      return null;
+    }
   }
+
+  transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: parseInt(process.env.EMAIL_PORT) === 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    connectionTimeout: 5000, // 5 second timeout instead of hanging
+    greetingTimeout: 5000,
+  });
 
   return transporter;
 };
@@ -100,8 +112,13 @@ const emailWrapper = (content) => `
  * Send email verification link
  */
 const sendVerificationEmail = async (user, token) => {
-  const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${token}`;
   const t = await getTransporter();
+  if (!t) {
+    console.log(`📧 Email skipped (no credentials): Verification email for ${user.email}`);
+    return;
+  }
+
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${token}`;
 
   const html = emailWrapper(`
     <p>Hi <span class="name">${user.name}</span>,</p>
@@ -138,8 +155,13 @@ const sendVerificationEmail = async (user, token) => {
  * Send password reset email
  */
 const sendPasswordResetEmail = async (user, token) => {
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
   const t = await getTransporter();
+  if (!t) {
+    console.log(`📧 Email skipped (no credentials): Password reset email for ${user.email}`);
+    return;
+  }
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
   const html = emailWrapper(`
     <p>Hi <span class="name">${user.name}</span>,</p>
