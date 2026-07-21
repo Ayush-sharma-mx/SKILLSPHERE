@@ -15,20 +15,32 @@ export const loadUser = createAsyncThunk('auth/loadUser', async (_, { rejectWith
 export const loginUser = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
   try {
     const { data } = await api.post('/auth/login', credentials);
+    if (!data.token) {
+      return rejectWithValue('Login failed: No authentication token received');
+    }
     localStorage.setItem('token', data.token);
     return data;
   } catch (err) {
-    return rejectWithValue(err.response?.data?.message || 'Login failed');
+    if (!err.response) {
+      return rejectWithValue('Cannot connect to server. Please check your internet connection.');
+    }
+    return rejectWithValue(err.response?.data?.message || `Login failed (${err.response?.status})`);
   }
 });
 
 export const registerUser = createAsyncThunk('auth/register', async (userData, { rejectWithValue }) => {
   try {
     const { data } = await api.post('/auth/register', userData);
+    if (!data.token) {
+      return rejectWithValue('Registration failed: No authentication token received');
+    }
     localStorage.setItem('token', data.token);
     return data;
   } catch (err) {
-    return rejectWithValue(err.response?.data?.message || 'Registration failed');
+    if (!err.response) {
+      return rejectWithValue('Cannot connect to server. Please check your internet connection.');
+    }
+    return rejectWithValue(err.response?.data?.message || `Registration failed (${err.response?.status})`);
   }
 });
 
