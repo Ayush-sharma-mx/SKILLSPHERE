@@ -1,4 +1,7 @@
 const crypto = require('crypto');
+const dns = require('dns');
+const { promisify } = require('util');
+const resolveMx = promisify(dns.resolveMx);
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const User = require('../models/User');
@@ -22,6 +25,23 @@ const register = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: 'An account with this email already exists.',
+      });
+    }
+
+    // Validate email domain has real MX records (rejects fake domains)
+    const emailDomain = email.toLowerCase().split('@')[1];
+    try {
+      const mxRecords = await resolveMx(emailDomain);
+      if (!mxRecords || mxRecords.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please use a valid email address from a real email provider.',
+        });
+      }
+    } catch (dnsError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email domain does not exist. Please use a real email address (e.g., Gmail, Outlook, Yahoo).',
       });
     }
 
