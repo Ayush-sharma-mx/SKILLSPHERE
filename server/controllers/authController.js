@@ -415,7 +415,7 @@ const resendVerification = async (req, res, next) => {
       console.error('Failed to send verification email:', emailError.message);
       return res.status(500).json({
         success: false,
-        message: 'Failed to send verification email. Please try again later.',
+        message: `Email Error: ${emailError.message}`, // Return exact error for debugging
       });
     }
 
