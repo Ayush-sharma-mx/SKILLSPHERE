@@ -50,10 +50,11 @@ const ProtectedRoute = ({ children, roles, skipVerification }) => {
   const { isAuthenticated, user, isLoading } = useSelector((s) => s.auth);
   if (isLoading) return <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FDFCFB' }}><LoadingSpinner size="lg" /></div>;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  // Block unverified users (except admin) from accessing protected routes
-  if (!skipVerification && !user?.isEmailVerified && user?.role !== 'admin') {
-    return <VerifyEmailNotice />;
-  }
+  
+  // NOTE: Email verification block removed because Render's Free Plan blocks outbound SMTP (port 587/465).
+  // Without a paid email API (like Resend), no one can receive verification emails.
+  // Fake email domains are still blocked by the backend DNS MX check during registration.
+  
   if (roles && !roles.includes(user?.role)) return <Navigate to="/dashboard" replace />;
   return children;
 };
