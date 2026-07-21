@@ -93,7 +93,7 @@ const accentColors = {
 const Landing = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FDFCFB' }}>
-      <Navbar />
+
 
       {/* ══════════════════════ HERO ══════════════════════ */}
       <section className="relative overflow-hidden pt-16 pb-28 px-4">

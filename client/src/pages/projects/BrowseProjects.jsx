@@ -52,7 +52,7 @@ const BrowseProjects = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FDFCFB' }}>
-      <Navbar />
+
 
       {/* Page Header */}
       <div className="border-b" style={{ borderColor: '#e8e4df', background: 'linear-gradient(to bottom, #f7f4f1, #FDFCFB)' }}>
