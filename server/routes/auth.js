@@ -15,6 +15,7 @@ const {
   enableTwoFactor,
   verifyTwoFactor,
   logout,
+  resendVerification,
 } = require('../controllers/authController');
 
 // Public routes with auth rate limiter
@@ -44,6 +45,7 @@ router.post('/reset-password/:token', authLimiter, resetPassword);
 router.get('/me', protect, getMe);
 router.post('/enable-2fa', protect, enableTwoFactor);
 router.post('/verify-2fa', protect, verifyTwoFactor);
+router.post('/resend-verification', protect, resendVerification);
 router.post('/logout', protect, logout);
 
 module.exports = router;

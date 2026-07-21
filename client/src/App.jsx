@@ -11,6 +11,7 @@ import Landing from './pages/Landing';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import VerifyEmail from './pages/auth/VerifyEmail';
+import VerifyEmailNotice from './pages/auth/VerifyEmailNotice';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 
@@ -45,10 +46,14 @@ import NotFound from './pages/NotFound';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 
 // Protected Route
-const ProtectedRoute = ({ children, roles }) => {
+const ProtectedRoute = ({ children, roles, skipVerification }) => {
   const { isAuthenticated, user, isLoading } = useSelector((s) => s.auth);
   if (isLoading) return <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FDFCFB' }}><LoadingSpinner size="lg" /></div>;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  // Block unverified users (except admin) from accessing protected routes
+  if (!skipVerification && !user?.isEmailVerified && user?.role !== 'admin') {
+    return <VerifyEmailNotice />;
+  }
   if (roles && !roles.includes(user?.role)) return <Navigate to="/dashboard" replace />;
   return children;
 };
