@@ -65,48 +65,48 @@ const ChatWindow = ({ conversation }) => {
   };
 
   if (!conversation) return (
-    <div className="flex-1 flex items-center justify-center text-gray-500 bg-gray-950">
+    <div className="flex-1 flex items-center justify-center" style={{ backgroundColor: '#FDFCFB' }}>
       <div className="text-center">
         <div className="text-5xl mb-3">💬</div>
-        <p className="font-medium text-gray-400">Select a conversation</p>
-        <p className="text-sm mt-1">Choose a chat from the sidebar to start messaging</p>
+        <p className="font-medium" style={{ color: '#111110' }}>Select a conversation</p>
+        <p className="text-sm mt-1" style={{ color: '#9a9590' }}>Choose a chat from the sidebar to start messaging</p>
       </div>
     </div>
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800 bg-gray-900">
+      <div className="flex items-center gap-3 px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e8e4df' }}>
         {otherUser?.avatar ? (
-          <img src={otherUser.avatar} alt={otherUser.name} className="w-9 h-9 rounded-full border border-gray-700 object-cover" />
+          <img src={otherUser.avatar} alt={otherUser.name} className="w-10 h-10 rounded-full object-cover" style={{ border: '1px solid #e8e4df' }} />
         ) : (
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+          <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold" style={{ background: 'linear-gradient(135deg, #EA6C2A, #f59e42)' }}>
             {getAvatarFallback(otherUser?.name || 'U')}
           </div>
         )}
         <div>
-          <h3 className="font-semibold text-white text-sm">{otherUser?.name || 'Conversation'}</h3>
-          <p className="text-xs text-green-400">Online</p>
+          <h3 className="font-semibold text-sm" style={{ color: '#111110' }}>{otherUser?.name || 'Conversation'}</h3>
+          <p className="text-xs" style={{ color: '#16a34a' }}>Online</p>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-gray-950">
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4" style={{ backgroundColor: '#FDFCFB' }}>
         {isLoading ? (
           <div className="flex justify-center py-8"><LoadingSpinner /></div>
         ) : messages.length === 0 ? (
-          <div className="text-center py-12 text-gray-600 text-sm">No messages yet. Start the conversation!</div>
+          <div className="text-center py-12 text-sm" style={{ color: '#9a9590' }}>No messages yet. Start the conversation!</div>
         ) : (
           messages.map((msg) => (
             <MessageBubble key={msg._id} message={msg} isOwn={(msg.sender?._id || msg.sender) === user?._id} />
           ))
         )}
         {typingUser && (
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs" style={{ color: '#9a9590' }}>
             <div className="flex gap-1">
               {[1, 2, 3].map(i => (
-                <span key={i} className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                <span key={i} className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: '#d0cbc5', animationDelay: `${i * 0.15}s` }} />
               ))}
             </div>
             <span>{typingUser} is typing...</span>
@@ -116,19 +116,25 @@ const ChatWindow = ({ conversation }) => {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSend} className="border-t border-gray-800 p-4 bg-gray-900">
+      <form onSubmit={handleSend} className="p-4" style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e8e4df' }}>
         <div className="flex items-center gap-3">
           <input
             value={text}
             onChange={(e) => handleTyping(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a message..."
-            className="flex-1 bg-gray-800 border border-gray-700 text-gray-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500"
+            className="flex-1 rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-colors"
+            style={{ backgroundColor: '#f7f4f1', border: '1px solid #e8e4df', color: '#111110' }}
+            onFocus={(e) => e.target.style.borderColor = '#EA6C2A'}
+            onBlur={(e) => e.target.style.borderColor = '#e8e4df'}
           />
           <button
             type="submit"
             disabled={!text.trim()}
-            className="w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
+            className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#EA6C2A', color: 'white' }}
+            onMouseEnter={e => { if (text.trim()) e.currentTarget.style.backgroundColor = '#d4581e'; }}
+            onMouseLeave={e => { if (text.trim()) e.currentTarget.style.backgroundColor = '#EA6C2A'; }}
           >
             <PaperAirplaneIcon className="w-4 h-4 text-white" />
           </button>
