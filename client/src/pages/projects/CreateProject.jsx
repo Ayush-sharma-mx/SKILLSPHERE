@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createProject } from '../../features/project/projectSlice';
 import Input, { Textarea, Select } from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { CATEGORIES, DURATION_OPTIONS, EXPERIENCE_LEVELS } from '../../utils/constants';
+import { CATEGORIES, DURATION_OPTIONS, EXPERIENCE_LEVELS, SKILLS_BY_CATEGORY } from '../../utils/constants';
 import { PlusIcon, TrashIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Footer from '../../components/layout/Footer';
 import toast from 'react-hot-toast';
@@ -160,31 +160,115 @@ const CreateProject = () => {
           {step === 2 && (
             <div className="space-y-5">
               <h2 className="text-xl font-bold" style={{ color: '#111110' }}>Required Skills</h2>
+              <p className="text-sm" style={{ color: '#9a9590' }}>
+                {form.category
+                  ? <>Showing skills for <strong style={{ color: '#EA6C2A' }}>{form.category}</strong>. Click to add, or type your own below.</>
+                  : 'Select a category in Step 1 to see suggested skills, or type your own below.'}
+              </p>
+
+              {/* Suggested Skills Grid */}
+              {form.category && ((() => {
+                const suggestions = (SKILLS_BY_CATEGORY[form.category] || []);
+                const filtered = skillInput.trim()
+                  ? suggestions.filter(s => s.toLowerCase().includes(skillInput.trim().toLowerCase()))
+                  : suggestions;
+                return filtered.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 p-4 rounded-xl" style={{ backgroundColor: '#f7f4f1', border: '1px solid #e8e4df' }}>
+                    {filtered.map(skill => {
+                      const isAdded = form.requiredSkills.includes(skill);
+                      return (
+                        <button
+                          key={skill}
+                          type="button"
+                          onClick={() => {
+                            if (isAdded) {
+                              setForm(f => ({ ...f, requiredSkills: f.requiredSkills.filter(s => s !== skill) }));
+                            } else {
+                              setForm(f => ({ ...f, requiredSkills: [...f.requiredSkills, skill] }));
+                            }
+                          }}
+                          className="px-3 py-1.5 text-sm rounded-lg font-medium transition-all duration-200 flex items-center gap-1.5"
+                          style={{
+                            backgroundColor: isAdded ? '#EA6C2A' : 'white',
+                            color: isAdded ? 'white' : '#6b6762',
+                            border: isAdded ? '1px solid #EA6C2A' : '1px solid #e8e4df',
+                            transform: isAdded ? 'scale(0.97)' : 'scale(1)',
+                            boxShadow: isAdded ? 'none' : '0 1px 2px rgba(0,0,0,0.04)',
+                          }}
+                          onMouseEnter={e => {
+                            if (!isAdded) {
+                              e.currentTarget.style.borderColor = '#EA6C2A';
+                              e.currentTarget.style.color = '#EA6C2A';
+                              e.currentTarget.style.transform = 'translateY(-1px)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(234,108,42,0.15)';
+                            }
+                          }}
+                          onMouseLeave={e => {
+                            if (!isAdded) {
+                              e.currentTarget.style.borderColor = '#e8e4df';
+                              e.currentTarget.style.color = '#6b6762';
+                              e.currentTarget.style.transform = 'scale(1)';
+                              e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)';
+                            }
+                          }}
+                        >
+                          {isAdded && <CheckIcon className="w-3.5 h-3.5" />}
+                          {skill}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null;
+              })())}
+
+              {/* Custom Skill Input */}
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: '#6b6762' }}>Add Skills <span style={{ color: '#ef4444' }}>*</span></label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#6b6762' }}>
+                  {form.category ? 'Search or add custom skill' : 'Add Skills'} <span style={{ color: '#ef4444' }}>*</span>
+                </label>
                 <input
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
-                  onKeyDown={addSkill}
-                  placeholder="Type a skill and press Enter (e.g. React.js)"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const val = skillInput.trim();
+                      if (val && !form.requiredSkills.includes(val)) {
+                        setForm(f => ({ ...f, requiredSkills: [...f.requiredSkills, val] }));
+                      }
+                      setSkillInput('');
+                    }
+                  }}
+                  placeholder={form.category ? `Search ${form.category} skills or type custom...` : 'Type a skill and press Enter'}
                   className="input-field w-full"
                 />
-                <p className="text-xs mt-1" style={{ color: '#9a9590' }}>Press Enter to add each skill</p>
+                <p className="text-xs mt-1" style={{ color: '#9a9590' }}>Press Enter to add a custom skill not in the list</p>
               </div>
-              <div className="flex flex-wrap gap-2 min-h-[48px] p-3 rounded-xl" style={{ backgroundColor: '#f7f4f1', border: '1px solid #e8e4df' }}>
-                {form.requiredSkills.length === 0 ? (
-                  <p className="text-sm" style={{ color: '#d0cbc5' }}>No skills added yet</p>
-                ) : (
-                  form.requiredSkills.map((skill, i) => (
-                    <span key={i} className="flex items-center gap-1.5 px-3 py-1 text-sm rounded-lg" style={{ backgroundColor: '#fff3ec', border: '1px solid rgba(234,108,42,0.2)', color: '#EA6C2A' }}>
-                      {skill}
-                      <button onClick={() => removeSkill(i)} style={{ color: '#EA6C2A' }}
-                        onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-                        onMouseLeave={e => e.currentTarget.style.color = '#EA6C2A'}
-                      >×</button>
-                    </span>
-                  ))
-                )}
+
+              {/* Selected Skills */}
+              <div>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#6b6762' }}>
+                  Selected Skills ({form.requiredSkills.length})
+                </label>
+                <div className="flex flex-wrap gap-2 min-h-[48px] p-3 rounded-xl" style={{ backgroundColor: '#f7f4f1', border: '1px solid #e8e4df' }}>
+                  {form.requiredSkills.length === 0 ? (
+                    <p className="text-sm" style={{ color: '#d0cbc5' }}>No skills added yet — click suggestions above or type your own</p>
+                  ) : (
+                    form.requiredSkills.map((skill, i) => (
+                      <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg font-medium animate-fade-in" style={{ backgroundColor: '#fff3ec', border: '1px solid rgba(234,108,42,0.2)', color: '#EA6C2A' }}>
+                        {skill}
+                        <button
+                          type="button"
+                          onClick={() => removeSkill(i)}
+                          className="ml-0.5 transition-colors font-bold"
+                          style={{ color: '#EA6C2A' }}
+                          onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+                          onMouseLeave={e => e.currentTarget.style.color = '#EA6C2A'}
+                        >×</button>
+                      </span>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           )}

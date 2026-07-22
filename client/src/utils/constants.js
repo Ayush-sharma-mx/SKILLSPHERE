@@ -113,3 +113,109 @@ export const AVAILABILITY_OPTIONS = [
   { value: 'busy', label: 'Currently Busy' },
   { value: 'not_available', label: 'Not Available' },
 ];
+
+export const SKILLS_BY_CATEGORY = {
+  'Web Development': [
+    'React.js', 'Next.js', 'Vue.js', 'Angular', 'Node.js', 'Express.js',
+    'TypeScript', 'JavaScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap',
+    'MongoDB', 'PostgreSQL', 'MySQL', 'Firebase', 'GraphQL', 'REST API',
+    'Redux', 'Webpack', 'Vite', 'SASS/SCSS', 'PHP', 'Laravel', 'Django',
+    'Ruby on Rails', 'Spring Boot', 'ASP.NET', 'WordPress', 'Shopify',
+  ],
+  'Mobile Development': [
+    'React Native', 'Flutter', 'Swift', 'Kotlin', 'Java', 'Dart',
+    'Xcode', 'Android Studio', 'Firebase', 'Expo', 'Objective-C',
+    'SwiftUI', 'Jetpack Compose', 'Ionic', 'Capacitor', 'App Store Deployment',
+  ],
+  'UI/UX Design': [
+    'Figma', 'Adobe XD', 'Sketch', 'InVision', 'Prototyping', 'Wireframing',
+    'User Research', 'Usability Testing', 'Design Systems', 'Responsive Design',
+    'Interaction Design', 'Information Architecture', 'Accessibility (WCAG)',
+    'Material Design', 'Motion Design', 'Framer',
+  ],
+  'Graphic Design': [
+    'Adobe Photoshop', 'Adobe Illustrator', 'CorelDRAW', 'Canva',
+    'Logo Design', 'Brand Identity', 'Typography', 'Print Design',
+    'Poster Design', 'Packaging Design', 'Social Media Graphics',
+    'Infographics', 'Vector Art', 'Photo Editing', 'Banner Design',
+  ],
+  'Content Writing': [
+    'Blog Writing', 'SEO Writing', 'Copywriting', 'Technical Writing',
+    'Creative Writing', 'Ghostwriting', 'Editing & Proofreading',
+    'Content Strategy', 'Social Media Content', 'Email Marketing Copy',
+    'Scriptwriting', 'Research Writing', 'Press Releases', 'UX Writing',
+  ],
+  'Digital Marketing': [
+    'Google Ads', 'Facebook Ads', 'SEO', 'SEM', 'Social Media Marketing',
+    'Email Marketing', 'Content Marketing', 'Influencer Marketing',
+    'Google Analytics', 'Affiliate Marketing', 'Marketing Automation',
+    'Conversion Optimization', 'HubSpot', 'Mailchimp', 'Meta Business Suite',
+  ],
+  'Data Science': [
+    'Python', 'R', 'Pandas', 'NumPy', 'SQL', 'Tableau', 'Power BI',
+    'Data Visualization', 'Statistical Analysis', 'Data Cleaning',
+    'Jupyter Notebook', 'Excel Advanced', 'ETL', 'Apache Spark',
+    'Big Data', 'Data Mining', 'A/B Testing', 'Matplotlib', 'Seaborn',
+  ],
+  'Machine Learning': [
+    'Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Keras',
+    'Deep Learning', 'NLP', 'Computer Vision', 'OpenCV', 'Hugging Face',
+    'Neural Networks', 'Reinforcement Learning', 'MLOps', 'LLMs',
+    'GANs', 'Transfer Learning', 'Model Deployment', 'ONNX',
+  ],
+  'DevOps & Cloud': [
+    'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform',
+    'CI/CD', 'Jenkins', 'GitHub Actions', 'Linux', 'Nginx', 'Ansible',
+    'Prometheus', 'Grafana', 'Serverless', 'CloudFormation', 'Helm',
+    'Bash Scripting', 'Monitoring', 'Load Balancing',
+  ],
+  'Cybersecurity': [
+    'Penetration Testing', 'Network Security', 'OWASP', 'Ethical Hacking',
+    'SOC Analysis', 'Firewall Management', 'Vulnerability Assessment',
+    'SIEM', 'Incident Response', 'Encryption', 'Compliance (GDPR/HIPAA)',
+    'Malware Analysis', 'Security Auditing', 'Identity Management',
+  ],
+  'Video Editing': [
+    'Adobe Premiere Pro', 'Final Cut Pro', 'DaVinci Resolve', 'After Effects',
+    'Motion Graphics', 'Color Grading', 'Sound Design', 'YouTube Editing',
+    'Short-form Video', 'Reels/TikTok', 'VFX', 'Screen Recording',
+    'Subtitling', 'Storyboarding', 'Animation',
+  ],
+  'Photography': [
+    'Portrait Photography', 'Product Photography', 'Photo Retouching',
+    'Adobe Lightroom', 'Adobe Photoshop', 'Studio Lighting',
+    'Drone Photography', 'Event Photography', 'Real Estate Photography',
+    'Food Photography', 'Fashion Photography', 'HDR Photography',
+  ],
+  'Translation': [
+    'English', 'Hindi', 'Spanish', 'French', 'German', 'Japanese',
+    'Chinese (Mandarin)', 'Arabic', 'Korean', 'Portuguese', 'Russian',
+    'Localization', 'Subtitling', 'Transcription', 'CAT Tools',
+  ],
+  'Legal': [
+    'Contract Drafting', 'Legal Research', 'Compliance', 'IP Law',
+    'Corporate Law', 'Privacy Policy', 'Terms of Service', 'GDPR',
+    'Trademark Filing', 'Legal Writing', 'Due Diligence', 'NDAs',
+  ],
+  'Accounting & Finance': [
+    'Tally', 'QuickBooks', 'GST Filing', 'Income Tax', 'Bookkeeping',
+    'Financial Modeling', 'Excel', 'SAP', 'Zoho Books', 'Payroll',
+    'Auditing', 'Budgeting', 'Cash Flow Management', 'Invoicing',
+  ],
+  'Virtual Assistant': [
+    'Email Management', 'Calendar Management', 'Data Entry', 'CRM',
+    'Project Coordination', 'Travel Booking', 'Social Media Management',
+    'Research', 'Document Management', 'Customer Follow-up', 'Notion',
+    'Slack', 'Trello', 'Asana', 'Google Workspace',
+  ],
+  'Customer Support': [
+    'Live Chat', 'Zendesk', 'Freshdesk', 'Intercom', 'Ticketing Systems',
+    'Phone Support', 'Email Support', 'CRM', 'Conflict Resolution',
+    'Technical Support', 'Knowledge Base', 'Salesforce', 'HubSpot',
+  ],
+  'Other': [
+    'Project Management', 'Agile/Scrum', 'Communication', 'Problem Solving',
+    'Microsoft Office', 'Google Workspace', 'Presentation Skills',
+    'Team Leadership', 'Strategic Planning', 'Process Improvement',
+  ],
+};
