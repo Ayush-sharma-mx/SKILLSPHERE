@@ -6,9 +6,10 @@ const { body, validationResult } = require('express-validator');
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    const messages = errors.array().map((err) => err.msg);
     return res.status(400).json({
       success: false,
-      message: 'Validation failed',
+      message: messages.join('. '),
       errors: errors.array().map((err) => ({
         field: err.path,
         message: err.msg,
@@ -72,14 +73,14 @@ const validateProject = [
     .trim()
     .notEmpty()
     .withMessage('Project title is required')
-    .isLength({ min: 5, max: 200 })
-    .withMessage('Title must be between 5 and 200 characters'),
+    .isLength({ min: 3, max: 200 })
+    .withMessage('Title must be between 3 and 200 characters'),
   body('description')
     .trim()
     .notEmpty()
     .withMessage('Project description is required')
-    .isLength({ min: 50 })
-    .withMessage('Description must be at least 50 characters'),
+    .isLength({ min: 20 })
+    .withMessage('Description must be at least 20 characters'),
   body('budget.min')
     .notEmpty()
     .withMessage('Minimum budget is required')
@@ -90,14 +91,7 @@ const validateProject = [
   body('budget.max')
     .optional()
     .isNumeric()
-    .withMessage('Maximum budget must be a number')
-    .custom((value, { req }) => {
-      if (value && req.body.budget && req.body.budget.min) {
-        return parseFloat(value) >= parseFloat(req.body.budget.min);
-      }
-      return true;
-    })
-    .withMessage('Maximum budget must be greater than or equal to minimum budget'),
+    .withMessage('Maximum budget must be a number'),
   body('budget.type')
     .optional()
     .isIn(['fixed', 'hourly'])
