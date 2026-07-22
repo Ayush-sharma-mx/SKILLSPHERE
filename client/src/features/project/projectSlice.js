@@ -24,7 +24,9 @@ export const createProject = createAsyncThunk('project/create', async (projectDa
     const { data } = await api.post('/projects', projectData);
     return data;
   } catch (err) {
-    return rejectWithValue(err.response?.data?.message || 'Failed to create project');
+    const msg = err.response?.data?.message || err.message || 'Failed to create project';
+    console.error('Create project error:', err.response?.data || err.message);
+    return rejectWithValue(msg);
   }
 });
 

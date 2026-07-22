@@ -88,7 +88,10 @@ const CreateProject = () => {
       const result = await dispatch(createProject(payload)).unwrap();
       toast.success('Project posted successfully!');
       navigate(`/projects/${result.data._id}`);
-    } catch (err) { toast.error(err || 'Failed to create project'); }
+    } catch (err) {
+      const msg = typeof err === 'string' ? err : (err?.message || JSON.stringify(err) || 'Failed to create project');
+      toast.error(msg);
+    }
   };
 
   return (
