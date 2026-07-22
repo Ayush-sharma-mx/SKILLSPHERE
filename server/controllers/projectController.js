@@ -31,6 +31,20 @@ const createProject = async (req, res, next) => {
       location, isRemote, deadline,
     } = req.body;
 
+    // Clean milestones: strip empty optional fields that would fail validation
+    const cleanedMilestones = (milestones || []).map(m => {
+      const clean = { title: m.title, amount: Number(m.amount) || 0 };
+      if (m.description && String(m.description).trim()) clean.description = m.description.trim();
+      if (m.dueDate && String(m.dueDate).trim()) clean.dueDate = new Date(m.dueDate);
+      return clean;
+    });
+
+    // Clean location: remove if all fields are empty
+    let cleanedLocation = undefined;
+    if (location && (location.city || location.state)) {
+      cleanedLocation = location;
+    }
+
     const project = await Project.create({
       client: req.user._id,
       title,
@@ -40,10 +54,10 @@ const createProject = async (req, res, next) => {
       budget,
       duration,
       experienceLevel,
-      milestones: milestones || [],
-      location,
+      milestones: cleanedMilestones,
+      location: cleanedLocation,
       isRemote: isRemote !== undefined ? isRemote : true,
-      deadline,
+      deadline: deadline && String(deadline).trim() ? new Date(deadline) : undefined,
     });
 
     // Asynchronously generate skill embedding
