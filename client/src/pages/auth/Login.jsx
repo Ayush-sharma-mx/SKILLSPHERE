@@ -23,7 +23,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Check if Google OAuth is configured on the backend
-  const googleOAuthEnabled = false; // Set to true once you add GOOGLE_CLIENT_ID to server/.env
+  const googleOAuthEnabled = true;
 
   useEffect(() => { if (isAuthenticated) navigate('/dashboard'); }, [isAuthenticated, navigate]);
   useEffect(() => { if (error) { toast.error(error); dispatch(clearError()); } }, [error, dispatch]);
@@ -180,7 +180,6 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Google OAuth — only shown when configured */}
           {googleOAuthEnabled && (
             <>
               <div className="relative my-6 flex items-center">
@@ -188,7 +187,7 @@ const Login = () => {
                 <span className="px-3 text-xs text-[#b5afa9] font-medium">or</span>
                 <div className="flex-1 border-t" style={{ borderColor: '#e4e0db' }} />
               </div>
-              <a href="http://localhost:5000/api/auth/google"
+              <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`}
                 className="w-full flex items-center justify-center gap-3 bg-white border rounded-2xl text-sm font-semibold text-[#3d3d3b] hover:border-[#ccc8c3] hover:bg-[#f7f4f1] transition-all shadow-sm hover:shadow-md"
                 style={{ padding: '13px 20px', borderColor: '#e4e0db' }}
               >

@@ -14,6 +14,7 @@ import VerifyEmail from './pages/auth/VerifyEmail';
 import VerifyEmailNotice from './pages/auth/VerifyEmailNotice';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
+import GoogleCallback from './pages/auth/GoogleCallback';
 
 // Dashboard Pages
 import ClientDashboard from './pages/dashboard/ClientDashboard';
@@ -81,6 +82,8 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/auth/google/success" element={<GoogleCallback />} />
+        <Route path="/auth/google/error" element={<GoogleCallback />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
