@@ -71,11 +71,20 @@ const CreateProject = () => {
 
   const handleSubmit = async () => {
     try {
+      const cleanMilestones = form.milestones.map(m => {
+        const cleaned = { title: m.title, amount: Number(m.amount) };
+        if (m.description && m.description.trim()) cleaned.description = m.description.trim();
+        if (m.dueDate && m.dueDate.trim()) cleaned.dueDate = m.dueDate;
+        return cleaned;
+      });
       const payload = {
         ...form,
         budget: { min: Number(form.budget.min), max: Number(form.budget.max), type: form.budget.type },
-        milestones: form.milestones.map(m => ({ ...m, amount: Number(m.amount) })),
+        milestones: cleanMilestones,
       };
+      if (!payload.location?.city && !payload.location?.state) {
+        delete payload.location;
+      }
       const result = await dispatch(createProject(payload)).unwrap();
       toast.success('Project posted successfully!');
       navigate(`/projects/${result.data._id}`);
